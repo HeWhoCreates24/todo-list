@@ -3,9 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TODO</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
+    <div class="dashboard">
+        <div class="card" id="todayCard">TODAY</div>
+        <div class="card" id="thisWeekCard">THIS WEEK</div>
+        <div class="card" id="thisMonthCard">THIS MONTH</div>
+        <div class="card" id="thisYearCard">THIS YEAR</div>
+    </div>
+    <div class="page" id="dayPage">
+        <p>TODAY</p>
+        <div class="pageContainer">
+            <div class="tasks">
+                <div class="addTask">
+                    +
+                </div>
+            </div>
+            <div class="timeLine"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
