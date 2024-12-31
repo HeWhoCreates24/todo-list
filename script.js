@@ -1,217 +1,74 @@
-const cards = document.querySelectorAll(".card");
+
+// accessing some constants
 const dashboard = document.querySelector(".dashboard");
 const page = document.querySelector(".page");
-const taskbox = document.querySelector(".tasks");
-const timeLine = document.querySelector(".timeLine");
+const pageHead = page.firstElementChild;
+const taskbox = page.querySelector(".taskbox");
+const timeLine = page.querySelector(".timeLine");
+const adder = taskbox.firstElementChild;
 
-let saves = {
-    "TODAY" : [false,{
-        "TASK" : [],
-        "TIME" : 0,
-        "DONE" : []
-    }],
-    "THIS WEEK" : [false,{
-        "TASK" : [],
-        "TIME" : 0,
-        "DONE" : []
-    }],
-    "THIS MONTH" : [false,{
-        "TASK" : [],
-        "TIME" : 0,
-        "DONE" : []
-    }],
-    "THIS YEAR" : [false,{
-        "TASK" : [],
-        "TIME" : 0,
-        "DONE" : []
-    }]
-};
+// initial dashboard render
+dbRender();
 
-cards.forEach(ele => {
-    ele.addEventListener("mouseover", () => {
-        ele.style.height = "30vh";
-    })
 
-    ele.addEventListener("mouseleave", () => {
-        ele.style.height = "6vh";
-    })
+// dashboard renderer
+function dbRender(){
 
-    ele.addEventListener("click", (evt) => {
-        timeLine.innerHTML = "";
-        taskbox.innerHTML = `<div class="addTask">
-                    +
-                </div>`;
-        let card = evt.target.id;
-        if(!saves[card][0]){
-            openCard(card, true);
-        }
-        else{
-            openCard(card, false);
-            addSave(card);
-        }
-    })
-});
+    // display
+    page.style.display = "none";
+    dashboard.style.display = "flex";
 
-const openCard = (card, setup) => {
-    dashboard.style.display = "none";
-    let pageHead = page.children[0];
-    let unit;
-    switch(card){
-        case "TODAY":
-            pageHead.innerHTML = "TODAY";
-            unit = "Hour";
-            tlDisplay(24, unit);
-            break;
-        case "THIS WEEK":
-            pageHead.innerHTML = "THIS WEEK";
-            unit = "Day";
-            tlDisplay(7, unit);
-            break;
-        case "THIS MONTH":
-            pageHead.innerHTML = "THIS MONTH";
-            unit = "Week";
-            tlDisplay(4, unit);
-            break;
-        case "THIS YEAR":
-            pageHead.innerHTML = "THIS YEAR";
-            unit = "Month";
-            tlDisplay(12, unit);
-            break;
-        default:
-    }
+    // interactions
+    dashboard.addEventListener("mouseover", scaleUp);
+    dashboard.addEventListener("click", cardRender);
 
-    const home = () => {
-        page.style.display = "none";
-        dashboard.style.display = "flex";
-        pageHead.removeEventListener("click", home);
-    }
-
-    const save = (field, value) => {
-        if(field == "TASK" || field == "DONE"){
-            // saves[pageHead.innerHTML][field].push(value);
-            saves[pageHead.innerHTML].field.push(value);
-            alert("here");
-        }
-        else if(field == "TIME"){
-            saves[pageHead.innerHTML][field] += value;
-        }
-    }
-
-    pageHead.addEventListener("click", home);
-
-    page.style.display = "block";
-
-    function tlDisplay(n, unit){
-        timeLine.style.gridTemplateRows = `1fr.repeat(${n})`;
-        for(i = 0; i < n; i++){
-            let div = document.createElement("div");
-            div.addEventListener("mouseover", () => {
-                div.style.scale = "1.5";
-                div.style.color = "var(--c5)";
-            })
-            div.addEventListener("mouseleave", () => {
-                div.style.scale = "1";
-                div.style.color = "transparent";
-            })
-            if(i != 0){
-                div.style.borderTop = "1px solid var(--c3)";
-            }
-            timeLine.appendChild(div);
-        }
+    function scaleUp(evt){
+        if(evt.target.classList.contains("expandable")) evt.target.style.height = "25vh";
+        evt.target.addEventListener("mouseleave", scaleDn);
     }
     
-    timeLine.addEventListener("mouseover", () => {
-        timeLine.style.width = "35%";
-        taskbox.style.width = "60%";
-    })
-    timeLine.addEventListener("mouseleave", () => {
-        timeLine.style.width = "15%";
-        taskbox.style.width = "80%";
-    })
+    function scaleDn(evt){
+        if(evt.target.classList.contains("expandable")) evt.target.style.height = "6vh";
+        evt.target.removeEventListener("mouseleave", scaleDn);
+    }
+    
+}
 
-    if(!setup){
-        updateTasks();
-        updatedTl();
+// card renderer
+function cardRender(evt){
+
+    // set card
+    let card = evt.target.id;
+
+    // display
+    page.style.display = "block";
+    dashboard.style.display = "none";
+
+    // set head
+    pageHead.innerHTML = card;
+
+    // set back
+    pageHead.addEventListener("mouseover", changeText)
+
+    function changeText(){
+        pageHead.innerHTML = "DASHBOARD ?";
+        pageHead.addEventListener("click", dbRender);
+        pageHead.addEventListener("mouseleave", changeAgain);
     }
 
-    const updateTasks = () => {
-        let tasks = saves[pageHead.innerHTML]["TASK"];
-        tasks.forEach(task => {
-            taskbox.insertBefore(task, add);
-        })
+    function changeAgain(){
+        pageHead.innerHTML = card;
+        pageHead.removeEventListener("mouseleave", changeAgain);
     }
 
-    const add = taskbox.querySelector(".addTask");
-    add.addEventListener("click", () => {
-        if(Array.from(taskbox.children).length == 4){
-            add.style.display = "none";
+    // set adder
+    setAdder();
+    function setAdder(){
+        if(taskbox.children.length >= 4){
+            adder.style.display = "none";
         }
-        addTask(add, unit, timeLine.children.length);
-    })
-    const addTask = (ele, unit, n) => {
-        let newTask = document.createElement("div");
-        newTask.setAttribute("class", "task");
-        newTask.innerHTML = `<p contenteditable=true>Task</p>
-        <div class="done"><i class="fa-solid fa-check"></i></div>
-        <div class="description" contenteditable=true>Description</div>
-        <div class="time" contenteditable=true>${unit}s</div>`;
-        const done = newTask.querySelector(".done");
-        done.addEventListener("click", () => {
-            let timeUsed = 0;
-            timeUsed += Number(done.parentElement.querySelector(".time").innerHTML);
-            save("TIME", timeUsed);
-            let taskTitle = done.previousElementSibling.innerHTML;
-            let div = timeLine.lastElementChild;
-            for(let i = 0; i < timeUsed; i++){
-                if(div.style.backgroundColor != "var(--c2)"){
-                    div.style.backgroundColor = "var(--c2)";
-                    div.innerHTML = taskTitle;
-                    save("DONE", taskTitle);
-                }
-                else{
-                    i--;
-                }
-                if(div != timeLine.firstElementChild){
-                    div = div.previousElementSibling;
-                }
-                else{
-                    Array.from(timeLine.children).forEach(ele => {
-                        ele.style.backgroundColor = "#00ff66";
-                    })
-                    div = timeLine.lastElementChild;
-                }
-            }
-            done.parentElement.remove();
-            add.style.display = "flex";
-        })
-        taskbox.insertBefore(newTask, ele);
-
-        let editables = ele.previousElementSibling.querySelectorAll("p, .description, .time");
-        Array.from(editables).forEach(ele => {
-            ele.addEventListener("focus", () => {
-                if(ele.innerHTML == "Task" || ele.innerHTML == "Description" || ele.innerHTML == "Days" || ele.innerHTML == "Weeks" || ele.innerHTML == "Months" || ele.innerHTML == "Hours"){
-                    ele.innerHTML = "";
-                }
-                ele.addEventListener("keypress", (evt) => {
-                    if(evt.key == "Enter"){
-                        evt.preventDefault();
-                        ele.blur();
-                        save("TASK", ele.parentElement);
-                        if(ele.nextElementSibling.classList.contains("done")){
-                            ele.nextElementSibling.nextElementSibling.focus();
-                        }
-                        else if(ele.classList.contains("description")){
-                            ele.nextElementSibling.focus();
-                        }
-                    }
-                    if(ele.classList.contains("time") && !((evt.key >= 0 && evt.key <= 9))){
-                        evt.preventDefault();
-                    }
-                })
-            })
-            if(ele.nextElementSibling.classList.contains("done")){
-                ele.focus();
-            }
-        })
+        else{
+            adder.style.display = "flex";
+        }
     }
 }
