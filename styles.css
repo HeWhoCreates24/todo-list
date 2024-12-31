@@ -77,17 +77,18 @@ body{
     align-items: center;
     border-radius: 1rem;
     height: 100%;
-    width: 70%;
+    width: 80%;
     transition: width 0.4s ease;
     gap: min(15px, 7vh, 7vw);
 }
 .timeLine{
     border-radius: 1rem;
     height: 100%;
-    width: 25%;
+    width: 15%;
     border: 3px solid var(--c3);
     transition: width 0.4s ease;
     display: grid;
+    overflow: hidden;
 }
 .addTask{
     height: 20%;
@@ -155,4 +156,14 @@ body{
     text-align: center;
     padding: min(35px, 7vh, 7vw) min(25px, 7vh, 7vw) 0 min(25px, 7vh, 7vw);
     font-size: 1.3rem;
+}
+.timeLine div{
+    font-size: 0.7rem;
+    padding: none;
+    margin: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: transparent;
+    transition: all 0.2s ease;
 }
