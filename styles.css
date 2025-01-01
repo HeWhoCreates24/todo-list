@@ -1,7 +1,7 @@
 *{
     margin: 0;
     padding: 0;
-    transition: all 0.4s ease;
+    transition: all 0.2s ease;
 }
 :root{
     --c1 : #FFFFFF;
@@ -52,7 +52,7 @@ body{
     justify-content: center;
     align-items: center;
 }
-.page p{
+.head{
     display: inline;
     z-index: 1;
     padding: min(15px, 7vh, 7vw);
@@ -60,6 +60,12 @@ body{
     border-radius: 1rem;
     border: 3px dashed var(--c3);
     cursor: pointer;
+}
+.headChange{
+    border: 3px solid var(--c2);
+    font-size: 2rem;
+    color: var(--c5);
+    background-color: var(--c2);
 }
 .pageContainer{
     padding-top: 2%;
@@ -91,7 +97,7 @@ body{
     display: grid;
     overflow: hidden;
 }
-.addTask{
+.adder{
     height: 20%;
     width: 100%;
     border: 3px dashed var(--c3);
@@ -104,6 +110,12 @@ body{
     font-size: 3rem;
     cursor: pointer;
 }
+.adderChange{
+    border: 3px solid var(--c2);
+    font-size: 2rem;
+    color: var(--c2);
+    background-color: #1aff0025;
+}
 .task{
     height: 23%;
     width: 100%;
@@ -113,7 +125,7 @@ body{
     grid-template-columns: minmax(min-content, 0.3fr) 0.5fr 0.5fr minmax(min-content, 0.2fr);
     grid-template-rows: 1fr 1fr 1fr;
 }
-.task p{
+.title{
     height: auto;
     width: auto;
     font-size: 1.5rem;
@@ -123,6 +135,7 @@ body{
     margin: min(10px, 7vh, 7vw);
     padding: 10px;
     text-wrap: nowrap;
+    border-radius: 1rem;
 }
 .done{
     grid-column: 1/2    ;
