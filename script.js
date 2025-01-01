@@ -39,11 +39,29 @@ function cardRender(evt){
 
     if (evt.target.classList.contains("expandable")){
         
-        // empty tasks and timeline
-
-
         // set card
         let card = evt.target.id;
+
+        // set unit
+        let unit;
+        switch(card){
+            case "TODAY":
+                unit = "Hour";
+                break;
+            case "THIS WEEK":
+                unit = "Day";
+                break;
+            case "THIS MONTH":
+                unit = "Week";
+                break;
+            case "THIS YEAR":
+                unit = "Month";
+                break;
+            default:
+        }
+
+        // set Tasks
+        let tasks = 0;
 
         // display
         page.style.display = "block";
@@ -78,23 +96,24 @@ function cardRender(evt){
             adder.removeEventListener("click", addTask);
 
             // remove tasks
-            Array.from(taskbox.children).forEach(task => {
-                if(task != adder){
-                    taskbox.removeChild(task);
-                }
-                if(adder.style.display == "none"){
-                    adder.style.display = "flex";
-                }
-            });
+            clearTasks();
 
             // db renderer
             dbRender();
         }
 
+        // clear tasks
+        function clearTasks(){
+            taskbox.innerHTML = "";
+            taskbox.appendChild(adder);
+            adder.style.display = "flex";
+            tasks = 0;
+        }
+
         // set adder
         setAdder();
         function setAdder(){
-            if(taskbox.children.length > 4){
+            if(tasks >= 4){
                 adder.style.display = "none";
             }
             else{
@@ -125,13 +144,14 @@ function cardRender(evt){
         function addTask(){
                 
             let newTask = createTask();
+            tasks++;
             taskbox.insertBefore(newTask, adder);
 
             // focus managemet
-            // manageFocus(adder.previousElementSibling);
+            manageFocus(adder.previousElementSibling.firstElementChild);
 
             // task events
-            // addTaskEvents(adder.previousElementSibling);
+            addTaskEvents(adder.previousElementSibling);
 
             function createTask(){
 
@@ -142,7 +162,6 @@ function cardRender(evt){
                 // title
                 let title = document.createElement("p");
                 title.classList.add("title");
-                title.setAttribute("contenteditable", true);
 
                 // done
                 let done = document.createElement("div");
@@ -152,42 +171,181 @@ function cardRender(evt){
                 // description
                 let description = document.createElement("div");
                 description.classList.add("description");
-                description.setAttribute("contenteditable", true);
+                description.innerText = "description";
+
+                // time
+                let time = document.createElement("div");
+                time.classList.add("time");
+                time.innerText = `${unit}s`;
 
                 // append elements to task
-                newTask.append(title, done, description);
+                newTask.append(title, done, description, time);
                 return newTask;
             }
 
-            if(taskbox.children.length > 4){
+            if(tasks >= 4){
                 adder.style.display = "none";
             }
         }
 
-        // focus manager
-        function manageFocus(task){
+        // add task events
+        function addTaskEvents(task){
 
-            // title focus
-            let inFocus = task.firstElementChild;
+            // interactions
+            task.addEventListener("mouseover", taskHover);
+            task.addEventListener("click", taskClick);
 
-            while(!inFocus.classList.contains("time"))
-                inFocus.focus();
-
-                // enter event
-                inFocus.addEventListener("keyress", enterEvt);
-
-                function enterEvt(evt){
-                    if(evt.key == "Enter"){
-
-                        evt.preventDefault();
-
-                        inFocus.removeEventListener("keypress", enterEvt);
-                        if(inFocus.classList.contains("title")){
-                            inFocus = inFocus.nextElementSibling.nextElementSibling;
-                        }
+            // task hover
+            function taskHover(evt){
+                let id = evt.target.classList[0];
+                let ele = evt.target;
+                if(id != "task"){
+                    if(id == "title"){
+                        ele.classList.add("titleChange");
+                        ele.addEventListener("mouseleave", taskLeave);
+                    }
+                    else if(id == "description"){
+                        ele.classList.add("descriptionChange");
+                        ele.addEventListener("mouseleave", taskLeave);
+                    }
+                    else if(id == "time"){
+                        ele.classList.add("timeChange");
+                        ele.addEventListener("mouseleave", taskLeave);
+                    }
+                    else if(id == "done"){
+                        ele.classList.add("doneChange");
+                        ele.addEventListener("mouseleave", taskLeave);
+                    }
+                    else if(id == "fa-solid"){
+                        ele.parentElement.classList.add("doneChange");
+                        ele.parentElement.addEventListener("mouseleave", taskLeave);
                     }
                 }
-            
+            }
+
+            // task leave
+            function taskLeave(evt){
+                let id = evt.target.classList[0];
+                let ele = evt.target;
+                if(id != "task"){
+                    if(id == "title"){
+                        ele.classList.remove("titleChange");
+                        ele.removeEventListener("mouseleave", taskLeave);
+                    }
+                    else if(id == "description"){
+                        ele.classList.remove("descriptionChange");
+                        ele.removeEventListener("mouseleave", taskLeave);
+                    }
+                    else if(id == "time"){
+                        ele.classList.remove("timeChange");
+                        ele.removeEventListener("mouseleave", taskLeave);
+                    }
+                    else if(id == "done"){
+                        ele.classList.remove("doneChange");
+                        ele.removeEventListener("mouseleave", taskLeave);
+                    }
+                    else if(id == "fa-solid"){
+                        ele.parentElement.classList.remove("doneChange");
+                        ele.parentElement.removeEventListener("mouseleave", taskLeave);
+                    }
+                }
+            }
+
+            // task click
+            function taskClick(evt){
+
+                let id = evt.target.classList[0];
+                let ele = evt.target;
+                if(id == "done"){
+                    clearTask(ele.parentElement);
+                }
+                else if(id == "fa-solid"){
+                    clearTask(ele.parentElement.parentElement);
+                }
+                else{
+                    manageFocus(ele);
+                }
+            }
+
+            // clear task
+            function clearTask(task){
+
+                //save task info
+
+                //remove eventlisteners
+                task.removeEventListener("mouseover", taskHover);
+                task.removeEventListener("click", taskClick);
+
+                //remove task
+                task.remove();
+                tasks--;
+
+                //set adder
+                if(tasks <= 3){
+                    adder.style.display = "flex";
+                }
+            }
+        }
+
+        // focus manager
+        function manageFocus(ele){
+
+            // title focus
+            let inFocus = ele;
+
+            inFocus.setAttribute("contenteditable", true);
+            inFocus.focus();
+            if(inFocus.innerHTML == "description" || inFocus.innerHTML == `${unit}s`){
+                inFocus.innerHTML = "";
+            }
+
+            // enter event
+            inFocus.addEventListener("keypress", enterEvt);
+
+            function enterEvt(evt){
+                if(evt.key == "Enter") evt.preventDefault();
+                if(evt.key == "Enter" && inFocus.innerHTML != ""){
+
+                    evt.preventDefault();
+
+                    inFocus.removeEventListener("keypress", enterEvt);
+                    inFocus.blur();
+                    inFocus.setAttribute("contenteditable", false);
+                    if(inFocus.classList.contains("title")){
+                        inFocus.removeEventListener("keypress", enterEvt);
+                        inFocus = inFocus.nextElementSibling.nextElementSibling;
+                        inFocus.setAttribute("contenteditable", true);
+                        inFocus.focus();
+                        if(inFocus.innerHTML == "description"){
+                            inFocus.innerHTML = "";
+                        }
+                        inFocus.addEventListener("keypress", enterEvt);
+                    }
+                    else if(inFocus.classList.contains("description")){
+                        inFocus.removeEventListener("keypress", enterEvt);
+                        inFocus = inFocus.nextElementSibling;
+                        inFocus.setAttribute("contenteditable", true);
+                        inFocus.focus();
+                        if(inFocus.innerHTML == `${unit}s`){
+                            inFocus.innerHTML = "";
+                        }
+                        inFocus.addEventListener("keypress", enterEvt);
+                    }
+                    else{
+                        let next = ele.parentElement.nextElementSibling;
+                            if(next.classList[0] == "task"){
+                                manageFocus(next.firstElementChild);
+                            }
+                    }
+                }
+
+                // only nums in time
+                else if(inFocus.classList.contains("time")){
+                    if(evt.key < "0" || evt.key > "9"){
+                        evt.preventDefault();
+                    }
+                }
+            }
         }
     }
 }

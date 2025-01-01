@@ -1,7 +1,7 @@
 *{
     margin: 0;
     padding: 0;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 :root{
     --c1 : #FFFFFF;
@@ -62,8 +62,7 @@ body{
     cursor: pointer;
 }
 .headChange{
-    border: 3px solid var(--c2);
-    font-size: 2rem;
+    border: none;
     color: var(--c5);
     background-color: var(--c2);
 }
@@ -137,6 +136,10 @@ body{
     text-wrap: nowrap;
     border-radius: 1rem;
 }
+.titleChange{
+    background-color: var(--c2);
+    color: var(--c5);
+}
 .done{
     grid-column: 1/2    ;
     grid-row: 2/4;
@@ -144,13 +147,16 @@ body{
     margin-bottom: min(10px, 7vh, 7vw);
     margin-right: min(10px, 7vh, 7vw);
     margin-left: min(10px, 7vh, 7vw);
-    background-color: #0f9e48;
+    background-color: var(--c4);
     font-size: 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 2px solid var(--c2);
     cursor: pointer;
+}
+.doneChange{
+    background-color: #0c8e10;
 }
 .description{
     background-color: var(--c4);
@@ -161,15 +167,22 @@ body{
     padding: min(10px, 7vh, 7vw);
     font-size: 1rem;
 }
+.descriptionChange{
+    font-size: 1.5rem;
+    background-color: var(--c5);
+}
 .time{
     grid-column: 4/5;
     grid-row: 1/4;
-    background-color: var(--c5);
+    background-color: var(--c4);
     border-radius: 1rem;
     margin: min(10px, 7vh, 7vw);
     text-align: center;
     padding: min(35px, 7vh, 7vw) min(25px, 7vh, 7vw) 0 min(25px, 7vh, 7vw);
     font-size: 1.3rem;
+}
+.timeChange{
+    background-color: var(--c5);
 }
 .timeLine div{
     font-size: 0.7rem;
