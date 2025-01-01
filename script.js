@@ -71,6 +71,27 @@ function dbRender(){
 function cardRender(evt){
 
     if (evt.target.classList.contains("expandable")){
+
+        // interaction
+        timeLine.addEventListener("mouseover", tlExpand);
+
+        // expand timeline
+        function tlExpand(){
+            taskbox.style.width = "70%";
+            timeLine.style.width = "25%";
+            timeLine.style.borderColor = "var(--c2)";
+
+            timeLine.addEventListener("mouseleave", tlShrink);
+        }
+
+        // shrink timeline
+        function tlShrink(){
+            timeLine.removeEventListener("mouseleave", tlShrink);
+
+            taskbox.style.width = "85%";
+            timeLine.style.width = "10%";
+            timeLine.style.borderColor = "var(--c3)";
+        }
         
         // set card
         let card = evt.target.id;
@@ -132,9 +153,16 @@ function cardRender(evt){
             // remove event listners
             adder.removeEventListener("mouseover", changeAdder);
             adder.removeEventListener("click", addTask);
+            timeLine.removeEventListener("mouseover", tlExpand);
+            let tlDiv = timeLine.firstElementChild;
+            for(let i = 0; i < n; i++){
+                tlDiv.removeEventListener("mouseover", divExpand);
+                tlDiv = tlDiv.nextElementSibling;
+            }
 
-            // remove tasks
+            // remove tasks and timeline
             clearTasks();
+            clearTimeline();
 
             // db renderer
             dbRender();
@@ -146,6 +174,11 @@ function cardRender(evt){
             taskbox.appendChild(adder);
             adder.style.display = "flex";
             tasks = 0;
+        }
+
+        // clear timeline
+        function clearTimeline(){
+            timeLine.innerHTML = "";
         }
 
         // set adder
@@ -300,7 +333,7 @@ function cardRender(evt){
                 else if(id == "fa-solid"){
                     clearTask(ele.parentElement.parentElement);
                 }
-                else{
+                else if(id != "task"){
                     manageFocus(ele);
                 }
             }
@@ -391,8 +424,39 @@ function cardRender(evt){
 
         function setTimeline(){
             for(let i = 0; i < n; i++){
+                let div = createTlDiv();
+                if(i == n-1) div.classList.remove("tlDiv");
+                timeLine.append(div);
 
+                // tl div interactions
+                let tlDiv = timeLine.lastElementChild;
+
+                tlDiv.addEventListener("mouseover", divExpand);
             }
+        }
+
+        // create tl div
+        function createTlDiv(){
+            let div = document.createElement("div");
+            div.classList.add("tlDiv");
+            return div;
+        }
+
+        // div expand
+        function divExpand(evt){
+            let ele = evt.target;
+            ele.style.scale = 1.5;
+
+            ele.addEventListener("mouseleave", divShrink);
+        }
+
+        //div shrink
+        function divShrink(evt){
+            let ele = evt.target;
+
+            ele.removeEventListener("mouseleave", divShrink);
+
+            ele.style.scale = 1;
         }
     }
 }
