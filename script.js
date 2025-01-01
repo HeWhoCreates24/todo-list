@@ -23,7 +23,7 @@ function changeMode(){
         root.style.setProperty("--c3", "#3160ED");
         root.style.setProperty("--c4", "#00297A");
         root.style.setProperty("--c5", "#000629");
-        root.style.setProperty("--gr", "#0c8e10");
+        root.style.setProperty("--gr", "#009765");
 
         mode = "dark";
     }
@@ -342,6 +342,7 @@ function cardRender(evt){
             function clearTask(task){
 
                 //save task info
+                updateTl(task);
 
                 //remove eventlisteners
                 task.removeEventListener("mouseover", taskHover);
@@ -457,6 +458,31 @@ function cardRender(evt){
             ele.removeEventListener("mouseleave", divShrink);
 
             ele.style.scale = 1;
+        }
+
+        // update tl
+        function updateTl(task){
+            let head = task.firstElementChild.innerHTML;
+            let time = task.lastElementChild.innerHTML;
+            let div = timeLine.lastElementChild;
+            let top = timeLine.firstElementChild;
+
+            for(let i = 0; i < time; i++){
+                if(div.style.backgroundColor != "var(--c2)"){
+                    div.style.backgroundColor = "var(--c2)";
+                }
+                else{
+                    i--;
+                }
+                if(div == top){
+                    Array.from(timeLine.children).forEach(ele => {
+                        ele.style.backgroundColor = "var(--gr)";
+                    })
+                    div = timeLine.lastElementChild;
+                }else{
+                    div = div.previousElementSibling;
+                }
+            }
         }
     }
 }

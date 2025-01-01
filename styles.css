@@ -9,7 +9,7 @@
     --c3 : #3160ED;
     --c4 : #00297A;
     --c5 : #000629;
-    --gr : #0c8e10;
+    --gr : #009765;
 }
 body{
     background-color: var(--c5);
@@ -192,5 +192,5 @@ body{
     overflow: hidden;
 }
 .tlDiv{
-    border-bottom: 2px solid var(--c3);
+    border-bottom: 2px dashed var(--c5);
 }
