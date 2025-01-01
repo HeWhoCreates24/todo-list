@@ -1,11 +1,44 @@
 
 // accessing some constants
+const root = document.documentElement;
+const modeIcon = document.querySelector(".mode");
 const dashboard = document.querySelector(".dashboard");
 const page = document.querySelector(".page");
 const pageHead = page.firstElementChild;
 const taskbox = page.querySelector(".taskbox");
 const timeLine = page.querySelector(".timeLine");
 const adder = taskbox.firstElementChild;
+
+//setup mode
+let mode = "dark";
+
+modeIcon.addEventListener("click", changeMode);
+
+// change mode
+function changeMode(){
+    if(mode == "light"){
+
+        root.style.setProperty("--c1", "#FFFFFF");
+        root.style.setProperty("--c2", "#bfb5ff");
+        root.style.setProperty("--c3", "#3160ED");
+        root.style.setProperty("--c4", "#00297A");
+        root.style.setProperty("--c5", "#000629");
+        root.style.setProperty("--gr", "#0c8e10");
+
+        mode = "dark";
+    }
+    else{
+
+        root.style.setProperty("--c5", "#EFEFEF");
+        root.style.setProperty("--c4", "#E5DA9F");
+        root.style.setProperty("--c3", "#F97F76");
+        root.style.setProperty("--c2", "#880D1E");
+        root.style.setProperty("--c1", "#0F1020");
+        root.style.setProperty("--gr", "#3bff42");
+
+        mode = "light";
+    }
+}
 
 // initial dashboard render
 dbRender();
@@ -42,20 +75,25 @@ function cardRender(evt){
         // set card
         let card = evt.target.id;
 
-        // set unit
+        // set unit and n
         let unit;
+        let n;
         switch(card){
             case "TODAY":
                 unit = "Hour";
+                n =  24;
                 break;
             case "THIS WEEK":
                 unit = "Day";
+                n = 7;
                 break;
             case "THIS MONTH":
                 unit = "Week";
+                n = 4;
                 break;
             case "THIS YEAR":
                 unit = "Month";
+                n = 12;
                 break;
             default:
         }
@@ -345,6 +383,15 @@ function cardRender(evt){
                         evt.preventDefault();
                     }
                 }
+            }
+        }
+
+        // set timeline
+        setTimeline();
+
+        function setTimeline(){
+            for(let i = 0; i < n; i++){
+
             }
         }
     }
