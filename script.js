@@ -3,11 +3,31 @@
 const root = document.documentElement;
 const modeIcon = document.querySelector(".mode");
 const dashboard = document.querySelector(".dashboard");
-const page = document.querySelector(".page");
-const pageHead = page.firstElementChild;
-const taskbox = page.querySelector(".taskbox");
-const timeLine = page.querySelector(".timeLine");
-const adder = taskbox.firstElementChild;
+let page = document.querySelector(".page");
+let pageHead = page.firstElementChild;
+let taskbox = page.querySelector(".taskbox");
+let timeLine = page.querySelector(".timeLine");
+let adder = taskbox.firstElementChild;
+
+// local data
+let dataBase = {
+    "TODAY": {
+        "saved": false,
+        "card": null
+    },
+    "THIS WEEK": {
+        "saved": false,
+        "card": null
+    },
+    "THIS MONTH": {
+        "saved": false,
+        "card": null
+    },
+    "THIS YEAR": {
+        "saved": false,
+        "card": null
+    }
+}
 
 //setup mode
 let mode = "dark";
@@ -23,7 +43,6 @@ function changeMode(){
         root.style.setProperty("--c3", "#3160ED");
         root.style.setProperty("--c4", "#00297A");
         root.style.setProperty("--c5", "#000629");
-        root.style.setProperty("--gr", "#009765");
 
         mode = "dark";
     }
@@ -34,7 +53,6 @@ function changeMode(){
         root.style.setProperty("--c3", "#F97F76");
         root.style.setProperty("--c2", "#880D1E");
         root.style.setProperty("--c1", "#0F1020");
-        root.style.setProperty("--gr", "#3bff42");
 
         mode = "light";
     }
@@ -72,6 +90,20 @@ function cardRender(evt){
 
     if (evt.target.classList.contains("expandable")){
 
+        // set card
+        let card = evt.target.id;
+
+        //is saved
+        let saved = dataBase[card]["saved"];
+        if(saved){
+            page.replaceWith(dataBase[card]["card"]);
+            page = dataBase[card]["card"];
+            pageHead = page.firstElementChild;
+            taskbox = page.querySelector(".taskbox");
+            timeLine = page.querySelector(".timeLine");
+            adder = taskbox.querySelector(".adder");
+        }
+
         // interaction
         timeLine.addEventListener("mouseover", tlExpand);
 
@@ -92,9 +124,6 @@ function cardRender(evt){
             timeLine.style.width = "10%";
             timeLine.style.borderColor = "var(--c3)";
         }
-        
-        // set card
-        let card = evt.target.id;
 
         // set unit and n
         let unit;
@@ -120,7 +149,13 @@ function cardRender(evt){
         }
 
         // set Tasks
-        let tasks = 0;
+        let tasks;
+        if(!saved){
+            tasks = 0;
+        }
+        else{
+            tasks = (Array.from(taskbox.children).length) - 1;
+        }
 
         // display
         page.style.display = "block";
@@ -128,6 +163,10 @@ function cardRender(evt){
 
         // set head
         pageHead.innerHTML = card;
+        if(saved){
+            pageHead.classList.remove("headChange");
+            pageHead.classList.add("head");
+        }
 
         // set back
         pageHead.addEventListener("mouseover", changeText)
@@ -160,6 +199,9 @@ function cardRender(evt){
                 tlDiv = tlDiv.nextElementSibling;
             }
 
+            // save card state
+            saveState();
+
             // remove tasks and timeline
             clearTasks();
             clearTimeline();
@@ -183,6 +225,16 @@ function cardRender(evt){
 
         // set adder
         setAdder();
+
+        // saved tasks events
+        if(saved){
+            Array.from(taskbox.children).forEach(task => {
+                if(task != adder){
+                    addTaskEvents(task);
+                }
+            });
+        }
+        
         function setAdder(){
             if(tasks >= 4){
                 adder.style.display = "none";
@@ -259,6 +311,7 @@ function cardRender(evt){
             }
         }
 
+
         // add task events
         function addTaskEvents(task){
 
@@ -285,10 +338,16 @@ function cardRender(evt){
                     }
                     else if(id == "done"){
                         ele.classList.add("doneChange");
+                        if(mode == "dark"){
+                            ele.style.color = "var(--c5)";
+                        }
                         ele.addEventListener("mouseleave", taskLeave);
                     }
                     else if(id == "fa-solid"){
                         ele.parentElement.classList.add("doneChange");
+                        if(mode == "dark"){
+                            ele.parentElement.style.color = "var(--c5)";
+                        }
                         ele.parentElement.addEventListener("mouseleave", taskLeave);
                     }
                 }
@@ -313,10 +372,12 @@ function cardRender(evt){
                     }
                     else if(id == "done"){
                         ele.classList.remove("doneChange");
+                        ele.style.color = "var(--c2)";
                         ele.removeEventListener("mouseleave", taskLeave);
                     }
                     else if(id == "fa-solid"){
                         ele.parentElement.classList.remove("doneChange");
+                        ele.parentElement.style.color = "var(--c2)";
                         ele.parentElement.removeEventListener("mouseleave", taskLeave);
                     }
                 }
@@ -424,15 +485,26 @@ function cardRender(evt){
         setTimeline();
 
         function setTimeline(){
-            for(let i = 0; i < n; i++){
-                let div = createTlDiv();
-                if(i == n-1) div.classList.remove("tlDiv");
-                timeLine.append(div);
+            if(!saved){
+                for(let i = 0; i < n; i++){
+                    let div = createTlDiv();
+                    if(i == n-1) div.style.border = "none";
+                    timeLine.append(div);
 
-                // tl div interactions
+                    // tl div interactions
+                    let tlDiv = timeLine.lastElementChild;
+
+                    tlDiv.addEventListener("mouseover", divExpand);
+                }
+            }
+            else{
                 let tlDiv = timeLine.lastElementChild;
-
-                tlDiv.addEventListener("mouseover", divExpand);
+                let top = timeLine.firstElementChild;
+                do{
+                    tlDiv.addEventListener("mouseover", divExpand);
+                    tlDiv = tlDiv.previousElementSibling;
+                }while(tlDiv != top);
+                top.addEventListener("mouseover", divExpand);
             }
         }
 
@@ -447,6 +519,7 @@ function cardRender(evt){
         function divExpand(evt){
             let ele = evt.target;
             ele.style.scale = 1.5;
+            ele.style.color = "var(--c5)";
 
             ele.addEventListener("mouseleave", divShrink);
         }
@@ -458,6 +531,7 @@ function cardRender(evt){
             ele.removeEventListener("mouseleave", divShrink);
 
             ele.style.scale = 1;
+            ele.style.color = "transparent";
         }
 
         // update tl
@@ -470,6 +544,7 @@ function cardRender(evt){
             for(let i = 0; i < time; i++){
                 if(div.style.backgroundColor != "var(--c2)"){
                     div.style.backgroundColor = "var(--c2)";
+                    div.innerHTML = head; 
                 }
                 else{
                     i--;
@@ -483,6 +558,14 @@ function cardRender(evt){
                     div = div.previousElementSibling;
                 }
             }
+        }
+
+        //savestate
+        function saveState(){
+            dataBase[card]["saved"] = true;
+            
+            let state = page.cloneNode(true);
+            dataBase[card]["card"] = state;
         }
     }
 }
