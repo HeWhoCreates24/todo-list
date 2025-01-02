@@ -74,21 +74,56 @@ function dbRender(){
     dashboard.addEventListener("click", cardRender);
 
     function scaleUp(evt){
-        if(evt.target.classList.contains("expandable")) evt.target.style.height = "25vh";
-        evt.target.addEventListener("mouseleave", scaleDn);
+        if(evt.target.classList.contains("expandable")){
+            evt.target.style.height = "15vh";
+            displayTasks(evt.target);
+            evt.target.addEventListener("mouseleave", scaleDn);
+        }
     }
     
     function scaleDn(evt){
-        if(evt.target.classList.contains("expandable")) evt.target.style.height = "6vh";
-        evt.target.removeEventListener("mouseleave", scaleDn);
+        if(evt.target.classList.contains("expandable")){
+            evt.target.style.height = "6vh";
+            hideTasks(evt.target);
+            evt.target.removeEventListener("mouseleave", scaleDn);
+        }
     }
     
+}
+
+// display tasks
+function displayTasks(card){
+    let taskDiv = card.firstElementChild;
+    taskDiv.style.height = "10vh";
+    
+    if(dataBase[card.id]["saved"]){
+        taskRender();
+    }
+
+    // render taskdiv
+    function taskRender(){
+        taskDiv.innerHTML = "";
+        let titles = dataBase[card.id]["card"].querySelectorAll(".title");
+        titles.forEach(title => {
+            let short = document.createElement("div");
+            short.classList.add("shortTask");
+            short.setAttribute("id", card.id);
+            short.innerHTML = `${title.innerHTML.slice(0, 5)}`;
+            taskDiv.append(short);
+        })
+    }
+}
+
+// hide tasks
+function hideTasks(card){
+    let taskDiv = card.firstElementChild;
+    taskDiv.style.height = "0vh";
 }
 
 // card renderer
 function cardRender(evt){
 
-    if (evt.target.classList.contains("expandable")){
+    if (evt.target.classList.contains("card") || evt.target.classList.contains("tasks") || evt.target.classList.contains("shortTask")){
 
         // set card
         let card = evt.target.id;

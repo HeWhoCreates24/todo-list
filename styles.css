@@ -39,6 +39,33 @@ body{
     justify-content: center;
     align-items: center;
 }
+.tasks{
+    overflow: hidden;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    height: 0vh;
+    width: 100%;
+    border-radius: 1rem;
+    background-color: var(--c4);
+    gap: 2%;
+}
+.shortTask{
+    margin-left: 2%;
+    height: 70%;
+    width: 20%;
+    text-wrap: wrap;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: var(--c2);
+    color: var(--c5);
+    transition: all 0.1s ease;
+    cursor: pointer;
+
+}
 .card{
     margin: min(15px, 7vh, 7vw);
     background-color: var(--c5);
