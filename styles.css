@@ -27,6 +27,7 @@ body{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    gap: 10px;
 }
 .mode{
     color: var(--c2);
