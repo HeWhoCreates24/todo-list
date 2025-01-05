@@ -13,30 +13,34 @@
 }
 body{
     background-color: var(--c5);
-    height: 97vh;
+    min-height: 97vh;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Courier New', Courier, monospace;
-    font-size: min(30px, 7vh, 7vw);
+    font-size: 1.3rem;
 }
 .mode{
     color: var(--c2);
-    position: absolute;
+    position: fixed;
     top: 2vh;
     right: 2vw;
     cursor: pointer;
 }
 .dashboard{
-    margin: min(30px, 7vh, 7vw);
+    margin-inline: 20px;
+    padding-inline: 1.5rem;
     background-color: var(--c4);
     border: 3px solid var(--c3);
-    height: min(80vh, min-content);
-    width: max(40vw, 50vh);
     border-radius: 1rem;
+    min-width: 200px;
+    width: 90%;
+    max-width: 500px;
+    min-height: 300px;
+    max-height: 500px;
     display: none;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 .tasks{
@@ -58,7 +62,7 @@ body{
     border-radius: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     background-color: var(--c2);
     color: var(--c5);
@@ -67,13 +71,13 @@ body{
 
 }
 .card{
-    margin: min(15px, 7vh, 7vw);
     background-color: var(--c5);
     border: 3px dashed var(--c3);
-    height: 6vh;
-    width: 90%;
+    min-height: 2rem;
+    width: 100%;
+    padding: 0.7rem 0.7rem 0 0.7rem;
+    margin: 1rem;
     border-radius: 1rem;
-    padding: min(15px, 7vh, 7vw);
     color: var(--c2);
     text-wrap-mode: nowrap;
 }
@@ -88,9 +92,14 @@ body{
     align-items: center;
 }
 .head{
-    display: inline;
+    display: inline-block;
+    position: relative;
+    bottom: 10px;
+    right: 10px;
+    margin-bottom: -5px;
     z-index: 1;
-    padding: min(15px, 7vh, 7vw);
+    padding: 0.7rem;
+    margin: none;
     background-color: var(--c5);
     border-radius: 1rem;
     border: 3px dashed var(--c3);
@@ -102,14 +111,13 @@ body{
     background-color: var(--c2);
 }
 .pageContainer{
-    padding-top: 2%;
-    padding-bottom: 2%;
     background-color: transparent;
-    height: 85%;
-    width: 100%;
+    height: 70vh;
+    width: 95%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    margin-inline: auto;
 }
 .taskbox{
     display: flex;
@@ -118,8 +126,9 @@ body{
     align-items: center;
     border-radius: 1rem;
     height: 100%;
-    width: 85%;
-    gap: min(15px, 7vh, 7vw);
+    flex-grow: 1;
+    margin-inline-start: 1rem;
+    gap: 10px;
 }
 .adder{
     height: 20%;
@@ -140,7 +149,7 @@ body{
     color: var(--c2);
 }
 .task{
-    height: 23%;
+    height: 23.4%;
     width: 100%;
     background-color: var(--c3);
     border-radius: 1rem;
@@ -151,11 +160,12 @@ body{
 .title{
     height: auto;
     width: auto;
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: var(--c2);
     background-color: var(--c5);
     border: none;
     margin: min(10px, 7vh, 7vw);
+    margin-bottom: 0px;
     padding: 10px;
     text-wrap: nowrap;
     border-radius: 1rem;
@@ -168,9 +178,7 @@ body{
     grid-column: 1/2    ;
     grid-row: 2/4;
     border-radius: 1rem;
-    margin-bottom: min(10px, 7vh, 7vw);
-    margin-right: min(10px, 7vh, 7vw);
-    margin-left: min(10px, 7vh, 7vw);
+    margin: 0.5rem;
     background-color: var(--c4);
     font-size: 1.5rem;
     display: flex;
@@ -200,18 +208,20 @@ body{
     grid-row: 1/4;
     background-color: var(--c4);
     border-radius: 1rem;
-    margin: min(10px, 7vh, 7vw);
+    margin: 0.5rem;
     text-align: center;
-    padding: min(35px, 7vh, 7vw) min(25px, 7vh, 7vw) 0 min(25px, 7vh, 7vw);
-    font-size: 1.3rem;
+    padding: 0.5rem;
+    font-size: 1rem;
 }
 .timeChange{
     background-color: var(--c5);
 }
 .timeLine{
     border-radius: 1rem;
-    height: 100%;
+    height: 70vh;
     width: 10%;
+    margin-inline: 1rem;
+    min-width: 50px;
     border: 3px solid var(--c3);
     display: grid;
     overflow: hidden;
@@ -228,4 +238,27 @@ body{
     padding: none;
     margin: none;
     line-height: 0;
+}
+@media (max-width: 700px) {
+    .description{
+        display: none;
+    }
+    .time{
+        grid-column: 3/5;
+        grid-row: 2/4;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .done{
+        grid-column: 1/3    ;
+        grid-row: 2/4;
+        margin-right: 0px;
+        margin-inline-start: 0.5rem;
+    }
+    .title{
+        grid-column: 1/5;
+        grid-row: 1;
+    }
 }

@@ -1,10 +1,5 @@
 
-const viewportHeight = window.innerHeight;
-const viewportWidth = window.innerWidth;
-
-if(viewportHeight >= 600 && viewportWidth >= 1200){
-
-    // accessing some constants
+// accessing some constants
 const root = document.documentElement;
 const modeIcon = document.querySelector(".mode");
 const dashboard = document.querySelector(".dashboard");
@@ -608,9 +603,4 @@ function cardRender(evt){
             dataBase[card]["card"] = state;
         }
     }
-}
-
-}
-else{
-    alert("please use a larger screen as the project is still under construction!");
 }
