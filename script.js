@@ -144,7 +144,6 @@ function cardRender(evt){
 
         // expand timeline
         function tlExpand(){
-            taskbox.style.width = "70%";
             timeLine.style.width = "25%";
             timeLine.style.borderColor = "var(--c2)";
 
@@ -155,7 +154,6 @@ function cardRender(evt){
         function tlShrink(){
             timeLine.removeEventListener("mouseleave", tlShrink);
 
-            taskbox.style.width = "85%";
             timeLine.style.width = "10%";
             timeLine.style.borderColor = "var(--c3)";
         }
