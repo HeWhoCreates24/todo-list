@@ -41,11 +41,35 @@ saveIcon.addEventListener("click", saveFile);
 loadIcon.addEventListener("click", loadFile);
 
 // load file
-function loadFile(){
-    let file = document.createElement("input");
-    file.type = "file";
-    file.accept = ".json";
-    file.click();
+function loadFile() {
+    let getFile = document.createElement("input");
+    getFile.type = "file";
+    getFile.accept = ".json";
+
+    // Add an event listener to handle file selection
+    getFile.addEventListener("change", function (event) {
+        const file = event.target.files[0]; // Get the selected file
+
+        if (file) {
+            const reader = new FileReader();
+
+            // When the file is read successfully
+            reader.onload = function (e) {
+                try {
+                     // Overwrite dataBase with parsed data
+                    console.log("dataBase overwritten with new data:", dataBase);
+                } catch (error) {
+                    console.error("Invalid JSON format:", error);
+                }
+            };
+
+            // Read the file as text
+            reader.readAsText(file);
+        }
+    });
+
+    // Programmatically click the input to open file dialog
+    getFile.click();
 }
 
 // save file
