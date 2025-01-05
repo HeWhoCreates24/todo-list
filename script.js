@@ -2,6 +2,8 @@
 // accessing some constants
 const root = document.documentElement;
 const modeIcon = document.querySelector(".mode");
+const saveIcon = document.querySelector(".save");
+const loadIcon = document.querySelector(".load");
 const dashboard = document.querySelector(".dashboard");
 let page = document.querySelector(".page");
 let pageHead = page.firstElementChild;
@@ -33,6 +35,42 @@ let dataBase = {
 let mode = "dark";
 
 modeIcon.addEventListener("click", changeMode);
+
+saveIcon.addEventListener("click", saveFile);
+
+loadIcon.addEventListener("click", loadFile);
+
+// load file
+function loadFile(){
+    let file = document.createElement("input");
+    file.type = "file";
+    file.accept = ".json";
+    file.click();
+}
+
+// save file
+function saveFile() {
+    // Convert your data to a JSON string
+    let file = JSON.stringify(dataBase);
+
+    // Create a Blob from the string
+    let blob = new Blob([file], { type: "application/json" });
+
+    // Create a temporary object URL for the Blob
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+
+    // Set the file name for download
+    link.download = "todoData.json";
+
+    // Add the link to the document, trigger the download, and clean up
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Revoke the object URL to free up memory
+    URL.revokeObjectURL(link.href);
+}
 
 // change mode
 function changeMode(){

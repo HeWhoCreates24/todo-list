@@ -27,6 +27,20 @@ body{
     right: 2vw;
     cursor: pointer;
 }
+.save{
+    color: var(--c2);
+    position: fixed;
+    top: 2vh;
+    right: 5vw;
+    cursor: pointer;
+}
+.load{
+    color: var(--c2);
+    position: fixed;
+    top: 2vh;
+    right: 8vw;
+    cursor: pointer;
+}
 .dashboard{
     margin-inline: 20px;
     padding-inline: 1.5rem;
@@ -211,9 +225,11 @@ body{
     background-color: var(--c4);
     border-radius: 1rem;
     margin: 0.5rem;
-    text-align: center;
     padding: 0.5rem;
     font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .timeChange{
     background-color: var(--c5);
