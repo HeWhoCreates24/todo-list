@@ -20,25 +20,24 @@ body{
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.3rem;
 }
-.mode{
-    color: var(--c2);
+.menu{
     position: fixed;
     top: 2vh;
     right: 2vw;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.mode{
+    color: var(--c2);
     cursor: pointer;
 }
 .save{
     color: var(--c2);
-    position: fixed;
-    top: 2vh;
-    right: 5vw;
     cursor: pointer;
 }
 .load{
     color: var(--c2);
-    position: fixed;
-    top: 2vh;
-    right: 8vw;
     cursor: pointer;
 }
 .dashboard{
