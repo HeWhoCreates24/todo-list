@@ -67,6 +67,7 @@ body{
     border-radius: 1rem;
     background-color: var(--c4);
     gap: 2%;
+    margin-bottom: 0.7rem;
 }
 .shortTask{
     margin-left: 2%;

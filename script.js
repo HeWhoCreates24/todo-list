@@ -56,7 +56,7 @@ function loadFile() {
             // When the file is read successfully
             reader.onload = function (e) {
                 try {
-                     // Overwrite dataBase with parsed data
+                    dataBase = JSON.parse(e.target.result);// Overwrite dataBase with parsed data
                     console.log("dataBase overwritten with new data:", dataBase);
                 } catch (error) {
                     console.error("Invalid JSON format:", error);
@@ -137,7 +137,6 @@ function dbRender(){
 
     function scaleUp(evt){
         if(evt.target.classList.contains("expandable")){
-            evt.target.style.height = "15vh";
             displayTasks(evt.target);
             evt.target.addEventListener("mouseleave", scaleDn);
         }
@@ -145,7 +144,6 @@ function dbRender(){
     
     function scaleDn(evt){
         if(evt.target.classList.contains("expandable")){
-            evt.target.style.height = "6vh";
             hideTasks(evt.target);
             evt.target.removeEventListener("mouseleave", scaleDn);
         }
@@ -192,6 +190,7 @@ function cardRender(evt){
 
         //is saved
         let saved = dataBase[card]["saved"];
+        let noAdder;
         if(saved){
             page.replaceWith(dataBase[card]["card"]);
             page = dataBase[card]["card"];
@@ -199,6 +198,12 @@ function cardRender(evt){
             taskbox = page.querySelector(".taskbox");
             timeLine = page.querySelector(".timeLine");
             adder = taskbox.querySelector(".adder");
+            if(adder.style.display == "none"){
+                noAdder = true;
+            }
+            else{
+                noAdder = false;
+            }
         }
 
         // interaction
@@ -485,6 +490,11 @@ function cardRender(evt){
                 let ele = evt.target;
                 if(id == "done"){
                     clearTask(ele.parentElement);
+                    if(noAdder){
+                        adder.addEventListener("mouseover", changeAdder);
+                        adder.addEventListener("click", addTask);
+                    }
+                    
                 }
                 else if(id == "fa-solid"){
                     clearTask(ele.parentElement.parentElement);
